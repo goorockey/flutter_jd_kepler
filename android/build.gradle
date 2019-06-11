@@ -31,4 +31,13 @@ android {
     lintOptions {
         disable 'InvalidPackage'
     }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_6
+        targetCompatibility JavaVersion.VERSION_1_6
+    }
+
+    dependencies {
+        implementation files('libs/jdmasdk.jar')
+        implementation files('libs/JDSDK_h.jar')
+    }
 }

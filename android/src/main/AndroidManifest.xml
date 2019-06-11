@@ -1,3 +1,14 @@
-<manifest xmlns:android="http://schemas.android.com/apk/res/android"
-  package="com.example.flutter_jd_kepler">
+<manifest xmlns:android="http://schemas.android.com/apk/res/android" package="com.example.flutter_jd_kepler">
+
+  <!-- <application android:allowBackup="true"> -->
+  <application>
+    <!-- 直接回呼 -->
+    <activity android:exported="true" android:name="com.kepler.jd.sdk.KeplerBackActivity" android:theme="@android:style/Theme.Translucent">
+      <intent-filter>
+        <action android:name="android.intent.action.VIEW"/>
+        <category android:name="android.intent.category.DEFAULT"/>
+        <data android:scheme="sdkback712e6a95e55c2521c1e4106d3a88dd1f"/>
+      </intent-filter>
+    </activity>
+  </application>
 </manifest>

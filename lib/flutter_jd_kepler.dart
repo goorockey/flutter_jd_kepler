@@ -7,14 +7,14 @@ class FlutterJdKepler {
       const MethodChannel('flutter_jd_kepler');
 
   static Future<bool> init(final String appKey, final String appSecret) async {
-    return await _channel.invokeMethod('init', {
+    return await _channel.invokeMethod<bool>('init', {
       'appKey': appKey,
       'appSecret': appSecret,
     });
   }
 
   static Future<bool> isLogin() async {
-    return await _channel.invokeMethod('isLogin');
+    return await _channel.invokeMethod<bool>('isLogin');
   }
 
   static Future<bool> login() async {
