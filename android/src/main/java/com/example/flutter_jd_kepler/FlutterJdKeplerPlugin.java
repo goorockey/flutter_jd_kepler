@@ -7,6 +7,8 @@ import com.kepler.jd.Listener.ActionCallBck;
 import com.kepler.jd.Listener.AsyncInitListener;
 import com.kepler.jd.Listener.LoginListener;
 import com.kepler.jd.login.KeplerApiManager;
+import android.os.Handler;
+import android.os.Looper;
 
 import io.flutter.plugin.common.MethodCall;
 import io.flutter.plugin.common.MethodChannel;
@@ -44,59 +46,133 @@ public class FlutterJdKeplerPlugin implements MethodCallHandler {
   }
 
   private void initJDSDK(final MethodCall call, final Result result) {
-    String appKey = call.argument("appKey");
-    String appSecret = call.argument("appSecret");
-    Activity activity = mRegistrar.activity();
+    try {
+      String appKey = call.argument("appKey");
+      String appSecret = call.argument("appSecret");
+      Activity activity = mRegistrar.activity();
+      KeplerApiManager.asyncInitSdk(activity.getApplication(), appKey, appSecret, new AsyncInitListener() {
+        @Override
+        public void onSuccess() {
+          new Handler(Looper.getMainLooper()).post(new Runnable() {
+            @Override
+            public void run() {
+              result.success(true);
+            }
+          });
+        }
 
-    KeplerApiManager.asyncInitSdk(activity.getApplication(), appKey, appSecret, new AsyncInitListener() {
-      @Override
-      public void onSuccess() {
-        result.success(true);
-      }
-
-      @Override
-      public void onFailure() {
-        result.success(false);
-      }
-    });
+        @Override
+        public void onFailure() {
+          new Handler(Looper.getMainLooper()).post(new Runnable() {
+            @Override
+            public void run() {
+              result.success(false);
+            }
+          });
+        }
+      });
+    } catch (Exception e) {
+      e.printStackTrace();
+      new Handler(Looper.getMainLooper()).post(new Runnable() {
+        @Override
+        public void run() {
+          result.success(false);
+        }
+      });
+    }
   }
 
   private void jdCheckLogin(final MethodCall call, final Result result) {
-    KeplerApiManager.getWebViewService().checkLoginState(new ActionCallBck() {
-      @Override
-      public boolean onDateCall(int key, String info) {
-        result.success(true);
-        return false;
-      }
+    try {
+      KeplerApiManager.getWebViewService().checkLoginState(new ActionCallBck() {
+        @Override
+        public boolean onDateCall(int key, String info) {
+          new Handler(Looper.getMainLooper()).post(new Runnable() {
+            @Override
+            public void run() {
+              result.success(true);
+            }
+          });
+          return false;
+        }
 
-      @Override
-      public boolean onErrCall(int key, String error) {
-        result.success(false);
-        return false;
-      }
-    });
+        @Override
+        public boolean onErrCall(int key, String error) {
+          new Handler(Looper.getMainLooper()).post(new Runnable() {
+            @Override
+            public void run() {
+              result.success(false);
+            }
+          });
+          return false;
+        }
+      });
+    } catch (Exception e) {
+      e.printStackTrace();
+      new Handler(Looper.getMainLooper()).post(new Runnable() {
+        @Override
+        public void run() {
+          result.success(false);
+        }
+      });
+    }
   }
 
   private void jdLogin(final MethodCall call, final Result result) {
-    Activity activity = mRegistrar.activity();
+    try {
+      Activity activity = mRegistrar.activity();
 
-    KeplerApiManager.getWebViewService().login(activity, new LoginListener() {
-      @Override
-      public void authSuccess() {
-        result.success(true);
-      }
+      KeplerApiManager.getWebViewService().login(activity, new LoginListener() {
+        @Override
+        public void authSuccess() {
+          new Handler(Looper.getMainLooper()).post(new Runnable() {
+            @Override
+            public void run() {
+              result.success(true);
+            }
+          });
+        }
 
-      @Override
-      public void authFailed(final int errCode) {
-        result.success(false);
-      }
-    });
+        @Override
+        public void authFailed(final int errCode) {
+          new Handler(Looper.getMainLooper()).post(new Runnable() {
+            @Override
+            public void run() {
+              result.success(false);
+            }
+          });
+        }
+      });
+    } catch (Exception e) {
+      e.printStackTrace();
+      new Handler(Looper.getMainLooper()).post(new Runnable() {
+        @Override
+        public void run() {
+          result.success(false);
+        }
+      });
+    }
   }
 
   private void jdLogout(final MethodCall call, final Result result) {
-    Activity activity = mRegistrar.activity();
+    try {
+      Activity activity = mRegistrar.activity();
 
-    KeplerApiManager.getWebViewService().cancelAuth(activity);
-    result.success(null);
+      KeplerApiManager.getWebViewService().cancelAuth(activity);
+      new Handler(Looper.getMainLooper()).post(new Runnable() {
+        @Override
+        public void run() {
+          result.success(null);
+        }
+      });
+    } catch (Exception e) {
+      e.printStackTrace();
+      new Handler(Looper.getMainLooper()).post(new Runnable() {
+        @Override
+        public void run() {
+          result.success(false);
+        }
+      });
+    }
   }
 }
