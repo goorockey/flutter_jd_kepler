@@ -15,6 +15,7 @@
 
   FlutterJdKeplerPlugin* instance = [[FlutterJdKeplerPlugin alloc] initWithViewController:viewController];
   [registrar addMethodCallDelegate:instance channel:channel];
+  [registrar addApplicationDelegate:instance];
 }
 
 - (instancetype)initWithViewController:(UIViewController *)viewController {
@@ -75,4 +76,14 @@
   result(@(YES));
 }
 
+- (BOOL)application:(UIApplication *)application openURL:(NSURL *)url sourceApplication:(NSString *)sourceApplication annotation:(id)annotation {
+    return [[KeplerApiManager sharedKPService] handleOpenURL:url];
+}
+// NOTE: 9.0以后使用新API接口
+- (BOOL)application:(UIApplication *)application openURL:(NSURL *)url options:(NSDictionary<NSString*, id> *)options
+{
+    return [[KeplerApiManager sharedKPService] handleOpenURL:url];
+}
+
 @end
+
